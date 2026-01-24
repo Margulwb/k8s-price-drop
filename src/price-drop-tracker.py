@@ -8,17 +8,14 @@ from file.logs import log_to_file, cleanup_old_logs
 from file.check_alert_send import get_sent_alerts, mark_as_sent
 from telegram.send import send_telegram
 
-TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 # SYMBOLS = ["ISAC.L"]
+# SHOW NAME OF THE STOCK INSTEAD OF THE SYMBOL
 SYMBOLS = ["ISAC.L", "CNDX.L", "CSPX.L", "FLXC.DE", "VWCG.DE", "ETFBW20TR.WA"]
 
-def is_market_open():
-    current_hour = datetime.now().hour
-    return 9 <= current_hour < 20
-
 def check_prices():
-    if not is_market_open():
+    current_time = datetime.now()
+    if current_time.hour < 9 or current_time.hour >= 20:
         return
 
     today = datetime.now().strftime('%Y-%m-%d')
@@ -57,4 +54,4 @@ if __name__ == "__main__":
     log_to_file("================================ Service Status: Started ================================")
     while True:
         check_prices()
-        time.sleep(600)
+        time.sleep(300)

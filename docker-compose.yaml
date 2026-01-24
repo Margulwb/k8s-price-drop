@@ -8,6 +8,6 @@ services:
     environment:
       - GENERIC_TIMEZONE=Europe/Warsaw
       - N8N_HOST=10.0.1.111
-      - WEBHOOK_URL=https://citizenship-pam-getting-win.trycloudflare.com # cloudflared tunnel --url http://localhost:5678
+      - WEBHOOK_URL=https://ending-persistent-testament-down.trycloudflare.com  # cloudflared tunnel --url http://localhost:5678
     volumes:
       - /opt/n8n_data:/home/node/.n8n
