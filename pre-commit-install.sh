@@ -1,12 +1,19 @@
 #!/bin/bash
 set -e
 
-- repo: local
+repos:
+  - repo: local
     hooks:
+      - id: check-ansible-vault
+        name: Check for Ansible Vault encryption
+        entry: bash -c 'grep -q "^\$ANSIBLE_VAULT;" "$1" || (echo -e "\n[!] ERROR: File $1 is UNENCRYPTED! Run: ansible-vault encrypt $1\n" && exit 1)' --
+        language: system
+        files: ^group_vars/secret\.yaml$
+        pass_filenames: true
+
       - id: check-jira-task
-        name: Check for JIRA task number
-        # Regex szuka wzorca: Duże litery, myślnik i cyfry (np. JIRA-123)
-        entry: bash -c 'grep -qE "[A-Z]+-[0-9]+" "$1" || (echo -e "\n[!] ERROR: Commit message must contain a JIRA task number (e.g., JIRA-546)\n" && exit 1)' --
+        name: Check for JIRA task number in message
+        entry: bash -c 'grep -qE "^([A-Z]+-[0-9]+)" "$1" || (echo -e "\n[!] ERROR: Commit message must start with a JIRA task (e.g. OLX-645). Current message in: $1\n" && exit 1)' --
         language: system
         stages: [commit-msg]
 
