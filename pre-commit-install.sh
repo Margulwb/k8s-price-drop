@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+- repo: local
+    hooks:
+      - id: check-jira-task
+        name: Check for JIRA task number
+        # Regex szuka wzorca: Duże litery, myślnik i cyfry (np. JIRA-123)
+        entry: bash -c 'grep -qE "[A-Z]+-[0-9]+" "$1" || (echo -e "\n[!] ERROR: Commit message must contain a JIRA task number (e.g., JIRA-546)\n" && exit 1)' --
+        language: system
+        stages: [commit-msg]
+
 # CONFIGURATION
 WORK_DIR="/opt/custom_folder/precommit_env"
 HOOKS_DIR="$WORK_DIR/git-hooks"
