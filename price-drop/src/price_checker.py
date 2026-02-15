@@ -30,9 +30,9 @@ def check_prices():
     try:
         current_time = datetime.now()
         hour = current_time.hour
-        if hour < MARKET_OPEN_HOUR or hour >= MARKET_CLOSE_HOUR:
-            log_to_file(f"Market closed ({current_time.strftime('%H:%M:%S')}). Skipping check.")
-            return
+        # if hour < MARKET_OPEN_HOUR or hour >= MARKET_CLOSE_HOUR:
+        #     log_to_file(f"Market closed ({current_time.strftime('%H:%M:%S')}). Skipping check.")
+        #     return
 
         log_to_file(f"Check prices triggered at {current_time.strftime('%H:%M:%S')}")
 
@@ -73,11 +73,15 @@ def check_prices():
                             f"Current Price: {current_price}\n"
                             f"Change: {change_pct:.4f}%"
                         )
-                        send_telegram(message)
-                        save_alert_threshold(symbol, current_threshold)
-                        result["alert_sent"] = True
-                        result["threshold"] = current_threshold
-                        log_to_file(f"Alert sent for {symbol_name}: threshold {current_threshold}")
+
+                        if hour < MARKET_OPEN_HOUR or hour >= MARKET_CLOSE_HOUR:                         
+                            send_telegram(message)
+                            save_alert_threshold(symbol, current_threshold)
+                            result["alert_sent"] = True
+                            result["threshold"] = current_threshold
+                            log_to_file(f"Alert sent for {symbol_name}: threshold {current_threshold}")
+                        else:
+                            log_to_file(f"Market closed ({current_time.strftime('%H:%M:%S')}). Skipping check.")
                     else:
                         result["alert_sent"] = False
                 else:

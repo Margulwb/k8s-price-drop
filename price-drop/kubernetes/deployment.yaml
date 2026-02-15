@@ -21,7 +21,7 @@ spec:
 
       containers:
       - name: price-drop-container
-        image: margulewicz/price-drop:20260207_110908
+        image: margulewicz/price-drop:20260214_082625
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
